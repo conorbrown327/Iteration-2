@@ -8,6 +8,8 @@
  * Includes
  ******************************************************************************/
 #include <EntityProject/facade/delivery_system.h>
+#include "entities/drone.h"
+#include "factories/composite_factory.h"
 #include <vector>
 #include <string>
 
@@ -59,6 +61,8 @@ class DeliverySimulation : public IDeliverySystem {
   */
   IEntity* CreateEntity(const picojson::object& val);
 
+  void RemoveEntity(IEntity* entity);
+
   /**
    *  This function should add a factory to the composite factory pattern
    */
@@ -108,6 +112,8 @@ class DeliverySimulation : public IDeliverySystem {
 
   void Update(float dt);
 
+  int Uid();
+
   /**
    * @brief You do not need to worry about this function
    * 
@@ -122,6 +128,11 @@ class DeliverySimulation : public IDeliverySystem {
   // the most straightforward way of storing the entities in the system.
   // Feel free to use it as is or change it.
   std::vector<IEntity*> entities_;
+  std::vector<IEntityObserver*> observers_;
+  Drone* scheduled_drone = nullptr;
+  CompositeFactory* entity_factory_; // To create entities in the simulation
+  const IGraph* graph_;
+  int id_ = -1;
 };
 
 }  // namespace csci3081

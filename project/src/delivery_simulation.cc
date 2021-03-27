@@ -1,36 +1,76 @@
 #include "delivery_simulation.h"
 #include "entity_base.h"
+#include "factories/drone_factory.h"
+#include "factories/customer_factory.h"
+#include "factories/package_factory.h"
 #include "json_helper.h"
-#include "drone.h"
+#include <limits>
 
 namespace csci3081 {
 
-DeliverySimulation::DeliverySimulation() {}
+DeliverySimulation::DeliverySimulation() {
+	entity_factory_ = new CompositeFactory();
+	AddFactory(new DroneFactory());
+	AddFactory(new CustomerFactory());
+	AddFactory(new PackageFactory());
+}
 
-DeliverySimulation::~DeliverySimulation() {}
+DeliverySimulation::~DeliverySimulation() {
+	for (auto ent : entities_) {
+		delete ent;
+	}
+	delete entity_factory_;
+}
+
+int DeliverySimulation::Uid() { id_++; return id_; }
 
 IEntity* DeliverySimulation::CreateEntity(const picojson::object& val) {
-  //TODO for lab10: replace the ?????'s with the appropriate values,
-  //  then uncomment the section of code
-  /*
-  if (JsonHelper::GetString(val, "????") == "drone") {
-    std::vector<float> position = JsonHelper::GetStdFloatVector(val, "????????");
-    std::vector<float> direction = JsonHelper::GetStdFloatVector(val, "????????");
-    return new Drone(????, ????, ????);
-  }
-  */
-  return NULL;
+    IEntity* ent = entity_factory_->CreateEntity(val);
+    if (ent) {
+	  EntityBase* b = dynamic_cast<EntityBase*>(ent);
+	  b->SetId(this->Uid());
+	  b->Print();
+      return ent;
+    }
+    return NULL;
 }
 
-void DeliverySimulation::AddFactory(IEntityFactory* factory) {}
-
-void DeliverySimulation::AddEntity(IEntity* entity) { 
-  //TODO for lab10: One line of code
+void DeliverySimulation::AddFactory(IEntityFactory* factory) {
+	entity_factory_->AddFactory(factory);
 }
 
-void DeliverySimulation::SetGraph(const IGraph* graph) {}
+void DeliverySimulation::AddEntity(IEntity* entity) {
+	// Add to entity vector
+	if (entity) { 
+		entities_.push_back(entity); 
+	} else {
+		std::cout << "Null entity attempted to be added" << std::endl;
+		return;
+	}
+}
 
-void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {}
+void DeliverySimulation::SetGraph(const IGraph* graph) {
+	graph_ = graph;
+}
+
+void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
+	Package* p = dynamic_cast<Package*>(package);
+	Customer* c = dynamic_cast<Customer*>(dest);
+	float min = std::numeric_limits<float>::infinity();
+	for (auto e : entities_) {
+		Drone* d = dynamic_cast<Drone*>(e);
+		if (d) {
+			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude();
+			if (score < min) min = score;
+			scheduled_drone = d;
+		}
+	}
+	auto path = graph_->GetPath(scheduled_drone->GetPosition(), p->GetPosition());
+	p->AssignCustomer(c);
+	scheduled_drone->SetGraph(graph_);
+	scheduled_drone->AssignPackage(p);
+	scheduled_drone->SetRoute(Vector3D::BuildRoute(path));
+}
 
 void DeliverySimulation::AddObserver(IEntityObserver* observer) {}
 
@@ -38,7 +78,34 @@ void DeliverySimulation::RemoveObserver(IEntityObserver* observer) {}
 
 const std::vector<IEntity*>& DeliverySimulation::GetEntities() const { return entities_; }
 
-void DeliverySimulation::Update(float dt) {}
+void DeliverySimulation::RemoveEntity(IEntity* entity) {
+  for (int i = 0; i < entities_.size(); i++) {
+    if (entities_[i]->GetId() == entity->GetId()) {
+      entities_.erase(entities_.begin() + i);
+      return;
+    }
+  }
+}
+
+void DeliverySimulation::Update(float dt) {
+	for (auto e : entities_) {
+		Package* p = dynamic_cast<Package*>(e);
+		if (p != nullptr) {
+			if (p->Delivered()) { 
+				printf("removing package\n");
+				p->SetPosition(Vector3D(0, -1000, 0));
+				this->RemoveEntity(p); 
+			}
+		}
+	}
+	if (scheduled_drone) {
+		if (scheduled_drone->ScheduledPackage()) { 
+			scheduled_drone->Update(dt); 
+		} else {
+			scheduled_drone = nullptr;
+		}
+	}
+}
 
 
 // DO NOT MODIFY THE FOLLOWING UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
