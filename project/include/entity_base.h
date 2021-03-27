@@ -51,7 +51,7 @@ class EntityBase : public IEntity {
 
     void SetPosition(std::vector<float> position) { position_ = position; }
 
-    void SetPosition(Vector3D position) { position_ = position.ToVector(); }
+    void SetPosition(Vector3D position) { position_ = {position.x, position.y, position.z}; }
 
     void SetDirection(Vector3D target) { direction_ = (target -= Vector3D(position_)).Normalize().ToVector(); }
 

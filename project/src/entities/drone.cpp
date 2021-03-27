@@ -25,19 +25,21 @@ namespace csci3081 {
     if (routeTarget_ >= route_.size()) {
       routeTarget_ = 0;
       route_.clear();
+      is_moving = false;
     }
-
     if (!scheduled_package->Delivered() && !is_moving) { is_moving = true; }
 
     Vector3D target_position = route_[routeTarget_];
-    Vector3D position = this->GetPosition();
-    if ((position - target_position).Magnitude() <= this->GetRadius()) {
+    Vector3D position = Vector3D(this->GetPosition());
+    if ((position -target_position).Magnitude() <= this->GetRadius()) {
       if (routeTarget_ == route_.size() - 1) {
         printf("Reached last node\n");
         if (!has_package && this->ScheduledPackage()) {
           this->PickUpPackage();
         } else if (has_package) {
           this->DropOffPackage();
+          routeTarget_ = 0;
+          route_.clear();
         } else {
           printf("Drone likely did not receive proper route");
         }
@@ -47,9 +49,10 @@ namespace csci3081 {
         routeTarget_ += 1;
       }
     } 
-    else if (is_moving) {
-      position += ((target_position - position).Normalize() * (5 * dt));
-      this->SetPosition(position);
+    if (is_moving) {
+      Vector3D direction = (target_position - position).Normalize();
+      Vector3D next = position += (direction.Normalize() *= dt);
+      this->SetPosition(next.ToVector());
       this->UpdateScheduledPackage();
       battery_->DepleteBattery(dt); // Deplete Battery
     }

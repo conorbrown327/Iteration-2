@@ -55,7 +55,6 @@ struct Vector3D {
         return *this;
     }
 
-    // In-place scaling operator.
     Vector3D operator*=(float s) {
         x *= s;
         y *= s;
@@ -75,7 +74,7 @@ struct Vector3D {
       return os;
     }
 
-    float Magnitude() { return x*x + y*y + z*z; }
+    float Magnitude() { return std::sqrt(x*x + y*y + z*z); }
 	float Dot(const Vector3D& rhs) { return x*rhs.x + y*rhs.y + z*rhs.z; }
     
     Vector3D Normalize() {
@@ -87,7 +86,7 @@ struct Vector3D {
         return *this;
     }
 
-    std::vector<float> ToVector() { return {x, y, z}; }
+    std::vector<float> ToVector() { std::vector<float> result = {x, y, z}; return result; }
 
     static std::vector<Vector3D> BuildRoute(std::vector<std::vector<float>> pts) {
         std::vector<Vector3D> route; 
@@ -98,6 +97,10 @@ struct Vector3D {
     }
 
     void Print() const { printf("<%f,%f,%f>\n", x, y, z); }
+
+    float DistanceTo(const Vector3D& rhs) {
+        return std::sqrt(std::pow(rhs.x-x,2)+std::pow(rhs.y-y,2)+std::pow(rhs.z-z,2));
+    }
 
 };
 

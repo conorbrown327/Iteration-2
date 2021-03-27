@@ -89,11 +89,7 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 
 void DeliverySimulation::Update(float dt) {
 	if (scheduled_drone) {
-		if (scheduled_drone->ScheduledPackage()) { 
-			scheduled_drone->Update(dt); 
-		} else {
-			scheduled_drone = nullptr;
-		}
+		scheduled_drone->Update(dt); 
 	}
 }
 
