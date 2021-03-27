@@ -88,16 +88,6 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 }
 
 void DeliverySimulation::Update(float dt) {
-	for (auto e : entities_) {
-		Package* p = dynamic_cast<Package*>(e);
-		if (p != nullptr) {
-			if (p->Delivered()) { 
-				printf("removing package\n");
-				p->SetPosition(Vector3D(0, -1000, 0));
-				this->RemoveEntity(p); 
-			}
-		}
-	}
 	if (scheduled_drone) {
 		if (scheduled_drone->ScheduledPackage()) { 
 			scheduled_drone->Update(dt); 

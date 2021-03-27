@@ -47,11 +47,9 @@ namespace csci3081 {
         routeTarget_ += 1;
       }
     } 
-    if (is_moving) {
-      position += (target_position - position).Normalize() * dt;
+    else if (is_moving) {
+      position += ((target_position - position).Normalize() * (5 * dt));
       this->SetPosition(position);
-      this->SetDirection(target_position.ToVector());
-
       this->UpdateScheduledPackage();
       battery_->DepleteBattery(dt); // Deplete Battery
     }
