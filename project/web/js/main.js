@@ -23,7 +23,7 @@ const mixers = [];
 const clock = new THREE.Clock();
 const loader = new THREE.GLTFLoader();
 const objloader = new THREE.OBJLoader();
-var simSpeed = 1.0;
+var simSpeed = 1;
 // Function definitions start here...
 
 // This is the function that is called once the document is started.
