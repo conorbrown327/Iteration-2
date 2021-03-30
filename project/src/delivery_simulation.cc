@@ -3,6 +3,7 @@
 #include "factories/drone_factory.h"
 #include "factories/customer_factory.h"
 #include "factories/package_factory.h"
+#include "factories/robot_factory.h"
 #include "json_helper.h"
 #include <limits>
 
@@ -13,6 +14,7 @@ DeliverySimulation::DeliverySimulation() {
 	AddFactory(new DroneFactory());
 	AddFactory(new CustomerFactory());
 	AddFactory(new PackageFactory());
+	AddFactory(new RobotFactory());
 }
 
 DeliverySimulation::~DeliverySimulation() {
@@ -41,8 +43,8 @@ void DeliverySimulation::AddFactory(IEntityFactory* factory) {
 
 void DeliverySimulation::AddEntity(IEntity* entity) {
 	// Add to entity vector
-	if (entity) { 
-		entities_.push_back(entity); 
+	if (entity) {
+		entities_.push_back(entity);
 	} else {
 		std::cout << "Null entity attempted to be added" << std::endl;
 		return;
@@ -89,7 +91,7 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 
 void DeliverySimulation::Update(float dt) {
 	if (scheduled_drone) {
-		scheduled_drone->Update(dt); 
+		scheduled_drone->Update(dt);
 	}
 }
 

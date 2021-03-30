@@ -12,6 +12,7 @@ class PackageFactory : public IEntityFactory {
   ~PackageFactory();
   IEntity* CreateEntity(const picojson::object &val) override;
 };
+
 }  // namespace csci3081
 
 #endif  // SRC_PACKAGE_FACTORY_H_
