@@ -13,8 +13,6 @@ class RobotFactory : public IEntityFactory {
   RobotFactory();
   ~RobotFactory();
   IEntity* CreateEntity(const picojson::object &val) override;
-
- private:
 };
 
 }
