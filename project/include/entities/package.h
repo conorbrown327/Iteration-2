@@ -12,7 +12,9 @@ class Package : public EntityBase {
  public:
 
   Package(std::vector<float> position) { SetPosition(position); SetType(PACKAGE); }
-  virtual ~Package() { delete customer_; }
+  virtual ~Package() {
+    //delete customer_; 
+  }
 
   void AssignCustomer(Customer* customer) { customer_ = customer; }
 
