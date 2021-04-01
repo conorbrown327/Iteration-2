@@ -36,9 +36,14 @@ class DeliveryAgent : public EntityBase {
 
   void Notify(std::vector<IEntityObserver*> observers, std::string value);
 
+  void AddUpcomingPackage(IEntity* package){upcoming_packages.push_back(package);}
+
+  void CheckUpcomingPackages(std::vector<IEntityObserver*> observers);
+
 protected:
   std::vector<Vector3D> route_;
   std::vector<std::vector<float>> original_route;
+  std::vector<IEntity*> upcoming_packages;
   const IGraph* graph_;
   int routeTarget_ = -1;
   bool has_package = false;

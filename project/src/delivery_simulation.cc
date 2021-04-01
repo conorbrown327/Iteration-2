@@ -57,6 +57,44 @@ void DeliverySimulation::SetGraph(const IGraph* graph) {
 
 void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 	scheduled_delivery_agent = nullptr;
+
+	bool available_deliverer = false;
+	DeliveryAgent* potential_deliverer;
+	for (auto e : entities_){
+		potential_deliverer = dynamic_cast<DeliveryAgent*>(e);
+		if (potential_deliverer){
+			if (potential_deliverer->ScheduledPackage() == false){ //drone doesn't have a scheduled package
+				available_deliverer = true;
+			}
+		}
+	}
+
+	// if (waiting_packages.empty() && available_deliverer == true){
+	// 	Package* p = dynamic_cast<Package*>(package);
+	// 	Customer* c = dynamic_cast<Customer*>(dest);
+	// 	p->AssignCustomer(c);
+	// 	//assign customer to package here
+	// }
+	// else if (!waiting_packages.empty() && available_deliverer == true){
+	// 	//assign customer to package
+	// 	//push package onto waiting_packages vector
+	// 	//pop_back of vector to get a waiting package
+	// 	//refactor code below to assign customer up here in if statemetns rather than at the end
+	// 	waiting_packages.push_back(package);
+	// 	Package* stored_package = dynamic_cast<Package*>(package);
+	// 	Customer* c = dynamic_cast<Customer*>(dest);
+	// 	stored_package->AssignCustomer(c);
+	// 	IEntity* waiting_package = waiting_packages.pop_back();
+	// 	Package* p = dynamic_cast<Package*>(waiting_package);
+	// }
+	if(available_deliverer == false){ //no delivery_agents available to deliver package
+		std::cout << "-----Adding package to upcoming_packages-----\n";
+		potential_deliverer->AddUpcomingPackage(package);
+		Package* stored_package = dynamic_cast<Package*>(package);
+		Customer* c = dynamic_cast<Customer*>(dest);
+		stored_package->AssignCustomer(c);
+		return;
+	}
 	Package* p = dynamic_cast<Package*>(package);
 	Customer* c = dynamic_cast<Customer*>(dest);
 	float min = std::numeric_limits<float>::infinity();
@@ -71,9 +109,6 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 				}
 			}
 		}
-	}
-	if (scheduled_delivery_agent == nullptr){ //no drone is available so call function again until it is available
-		this->ScheduleDelivery(package, dest);
 	}
 	p->Notify(observers_, "scheduled");
 	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());

@@ -21,6 +21,21 @@ namespace csci3081 {
     this->SetDirection({0, 1, 0});
   }
 
+  void DeliveryAgent::CheckUpcomingPackages(std::vector<IEntityObserver*> observers){
+    if (upcoming_packages.empty() == true){
+      IEntity* entity_package = upcoming_packages[0];
+      upcoming_packages.erase(upcoming_packages.begin());
+      Package* p = dynamic_cast<Package*>(entity_package);
+      p->Notify(observers, "scheduled");
+    	auto path = graph_->GetPath(this->GetPosition(), p->GetPosition());
+      this->SetGraph(graph_);
+    	this->AssignPackage(p);
+    	this->SetRoute(Vector3D::BuildRoute(path));
+    	this->SetOriginalRoute(path);
+    	this->Notify(observers, "moving");
+    }
+  }
+
 
   void DeliveryAgent::Update(float dt, std::vector<IEntityObserver*> observers) {
     if (routeTarget_ >= route_.size()) {
@@ -45,6 +60,7 @@ namespace csci3081 {
           this->Notify(observers, "idle");
           routeTarget_ = 0;
           route_.clear();
+          this->CheckUpcomingPackages(observers);
         } else {
           printf("DeliveryAgent likely did not receive proper route");
         }
