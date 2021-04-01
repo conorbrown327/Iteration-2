@@ -32,8 +32,13 @@ class DeliveryAgent : public EntityBase {
 
   void SetRoute(std::vector<Vector3D> route) { route_ = route; routeTarget_ = 0; }
 
+  void SetOriginalRoute(std::vector<std::vector<float>> route){original_route = route;}
+
+  void Notify(std::vector<IEntityObserver*> observers, std::string value);
+
 protected:
   std::vector<Vector3D> route_;
+  std::vector<std::vector<float>> original_route;
   const IGraph* graph_;
   int routeTarget_ = -1;
   bool has_package = false;

@@ -9,6 +9,7 @@ namespace csci3081 {
     if (route.size() == 0) printf("There is no path from package to customer!\n");
     routeTarget_ = 0;
     route_ = Vector3D::BuildRoute(route);
+    original_route = route;
     has_package = true;
   }
 
@@ -36,10 +37,12 @@ namespace csci3081 {
         printf("Reached last node\n");
         if (!has_package && this->ScheduledPackage()) {
           this->PickUpPackage();
+          this->Notify(observers, "moving");
           scheduled_package->Notify(observers, "en route");
         } else if (has_package) {
           this->DropOffPackage();
           scheduled_package->Notify(observers, "delivered");
+          this->Notify(observers, "idle");
           routeTarget_ = 0;
           route_.clear();
         } else {
@@ -58,6 +61,27 @@ namespace csci3081 {
       this->UpdateScheduledPackage();
       battery_->DepleteBattery(dt); // Deplete Battery
     }
+  }
+
+  void DeliveryAgent::Notify(std::vector<IEntityObserver*> observers, std::string value){
+    if (value.compare("idle") == 0){
+      picojson::object notification = JsonHelper::CreateJsonNotification();
+      JsonHelper::AddStringToJsonObject(notification, "value", value);
+      picojson::value delivery_agent_value = JsonHelper::ConvertPicojsonObjectToValue(notification);
+      for (IEntityObserver* observer : observers){
+        observer->OnEvent(delivery_agent_value, *this);
+      }
+    }
+    else if(value.compare("moving") == 0){
+      picojson::object notification = JsonHelper::CreateJsonNotification();
+      JsonHelper::AddStringToJsonObject(notification, "value", value);
+      JsonHelper::AddStdVectorVectorFloatToJsonObject(notification, "path", original_route);
+      picojson::value delivery_agent_value = JsonHelper::ConvertPicojsonObjectToValue(notification);
+      for (IEntityObserver* observer : observers){
+        observer->OnEvent(delivery_agent_value, *this);
+      }
+    }
+
   }
 
 }

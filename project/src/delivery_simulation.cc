@@ -81,6 +81,8 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 	scheduled_delivery_agent->SetGraph(graph_);
 	scheduled_delivery_agent->AssignPackage(p);
 	scheduled_delivery_agent->SetRoute(Vector3D::BuildRoute(path));
+	scheduled_delivery_agent->SetOriginalRoute(path);
+	scheduled_delivery_agent->Notify(observers_, "moving");
 }
 
 void DeliverySimulation::AddObserver(IEntityObserver* observer) {
