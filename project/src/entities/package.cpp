@@ -9,4 +9,13 @@ void Package::Deliver() {
   delivered_ = true;
 }
 
+void Package::Notify(std::vector<IEntityObserver*> observers, std::string value){
+  for (IEntityObserver* observer : observers){
+		picojson::object notification = JsonHelper::CreateJsonNotification();
+		JsonHelper::AddStringToJsonObject(notification, "value", value);
+		picojson::value package_value = JsonHelper::ConvertPicojsonObjectToValue(notification);
+		observer->OnEvent(package_value, *this);
+	}
+}
+
 }  // namespace csci3081

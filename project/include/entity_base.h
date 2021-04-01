@@ -41,7 +41,7 @@ class EntityBase : public IEntity {
     /// Returns the entity's radius.
     float GetRadius() const override { return radius_; }
     ///Get version can be used to see whether or not a variable other than position or direction has changed.
-    int GetVersion() const override { return 0; }    
+    int GetVersion() const override { return 0; }
 
     EntityType GetType() { return t_; }
     /// This method specifies whether or not the entity is static (doesn't change often) or moves.

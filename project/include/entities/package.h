@@ -13,20 +13,22 @@ class Package : public EntityBase {
 
   Package(std::vector<float> position) { SetPosition(position); SetType(PACKAGE); }
   virtual ~Package() { delete customer_; }
-  
+
   void AssignCustomer(Customer* customer) { customer_ = customer; }
 
   const Customer* GetCustomer() { return customer_; }
-  
+
   bool IsDynamic() const override { return true; }
-  
+
   float GetWeight() const { return weight_; };
-  
+
   void SetWeight(float weight) {weight_ = weight; }
 
   void Deliver();
 
   bool Delivered() { return delivered_; }
+
+  void Notify(std::vector<IEntityObserver*> observers, std::string value);
 
  private:
   Customer* customer_;

@@ -29,7 +29,7 @@ class Drone : public EntityBase {
   void SetGraph(const IGraph* graph) { graph_ = graph; }
   float GetRemainingBattery() const { return battery_->ChargeLeft(); };
   const std::vector<Vector3D>& GetRoute() const { return route_; }
-  bool IsDynamic() const override { return true; }
+  bool IsDynamic() const override { return is_moving; } //changed "return true" to "return is_moving"
 
   void SetRoute(std::vector<Vector3D> route) { route_ = route; routeTarget_ = 0; }
 
