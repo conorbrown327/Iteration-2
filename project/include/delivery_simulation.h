@@ -124,12 +124,15 @@ class DeliverySimulation : public IDeliverySystem {
    */
   void RunScript(const picojson::array& script, IEntitySystem* system) const;
 
+  bool PackageWaiting(){return !waiting_packages.empty();}
+
  private:
   // You don't strictly need to use the following variable, but it is probably
   // the most straightforward way of storing the entities in the system.
   // Feel free to use it as is or change it.
   std::vector<IEntity*> entities_;
   std::vector<IEntityObserver*> observers_;
+  std::vector<IEntity*> waiting_packages;
   DeliveryAgent* scheduled_delivery_agent = nullptr;
   CompositeFactory* entity_factory_; // To create entities in the simulation
   const IGraph* graph_;

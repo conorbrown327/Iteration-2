@@ -23,6 +23,9 @@ namespace csci3081 {
 
 
   void DeliveryAgent::Update(float dt, std::vector<IEntityObserver*> observers) {
+    if(scheduled_package == nullptr){
+      return;
+    }
     if (routeTarget_ >= route_.size()) {
       routeTarget_ = 0;
       route_.clear();
@@ -45,6 +48,7 @@ namespace csci3081 {
           this->Notify(observers, "idle");
           routeTarget_ = 0;
           route_.clear();
+          scheduled_package = nullptr;
         } else {
           printf("DeliveryAgent likely did not receive proper route");
         }
