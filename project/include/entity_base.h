@@ -24,7 +24,7 @@ namespace csci3081 {
  *
  * See the documentation for IEntity for more information
  */
-enum EntityType { UNDEFINED_ENTITY, DRONE, CUSTOMER, PACKAGE };
+enum EntityType { UNDEFINED_ENTITY, DRONE, CUSTOMER, PACKAGE, ROBOT };
 
 class EntityBase : public IEntity {
  public:

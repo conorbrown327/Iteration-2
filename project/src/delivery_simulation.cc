@@ -3,6 +3,7 @@
 #include "factories/drone_factory.h"
 #include "factories/customer_factory.h"
 #include "factories/package_factory.h"
+#include "factories/robot_factory.h"
 #include "json_helper.h"
 #include <limits>
 
@@ -13,6 +14,7 @@ DeliverySimulation::DeliverySimulation() {
 	AddFactory(new DroneFactory());
 	AddFactory(new CustomerFactory());
 	AddFactory(new PackageFactory());
+	AddFactory(new RobotFactory());
 }
 
 DeliverySimulation::~DeliverySimulation() {
@@ -59,8 +61,9 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 	Customer* c = dynamic_cast<Customer*>(dest);
 	float min = std::numeric_limits<float>::infinity();
 	for (auto e : entities_) {
-		Drone* d = dynamic_cast<Drone*>(e);
+		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d) {
+
 			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude(); //calculating distance from drone to package
 			if (score < min){
 				if (d->ScheduledPackage()==false && d->IsDynamic()==false){
@@ -78,9 +81,9 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 	p->Notify(observers_, "scheduled");
 	auto path = graph_->GetPath(scheduled_drone->GetPosition(), p->GetPosition());
 	p->AssignCustomer(c);
-	scheduled_drone->SetGraph(graph_);
-	scheduled_drone->AssignPackage(p);
-	scheduled_drone->SetRoute(Vector3D::BuildRoute(path));
+	scheduled_delivery_agent->SetGraph(graph_);
+	scheduled_delivery_agent->AssignPackage(p);
+	scheduled_delivery_agent->SetRoute(Vector3D::BuildRoute(path));
 }
 
 void DeliverySimulation::AddObserver(IEntityObserver* observer) {
@@ -103,6 +106,7 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 }
 
 void DeliverySimulation::Update(float dt) {
+
 	for (auto e : entities_){
 		Drone* d = dynamic_cast<Drone*>(e);
 		if (d){
