@@ -29,9 +29,9 @@ int DeliverySimulation::Uid() { id_++; return id_; }
 IEntity* DeliverySimulation::CreateEntity(const picojson::object& val) {
     IEntity* ent = entity_factory_->CreateEntity(val);
     if (ent) {
-	  EntityBase* b = dynamic_cast<EntityBase*>(ent);
-	  b->SetId(this->Uid());
-	  b->Print();
+	  	EntityBase* b = dynamic_cast<EntityBase*>(ent);
+	  	b->SetId(this->Uid());
+	  	b->Print();
       return ent;
     }
     return NULL;
@@ -56,27 +56,43 @@ void DeliverySimulation::SetGraph(const IGraph* graph) {
 }
 
 void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
+	scheduled_drone = nullptr;
 	Package* p = dynamic_cast<Package*>(package);
 	Customer* c = dynamic_cast<Customer*>(dest);
 	float min = std::numeric_limits<float>::infinity();
 	for (auto e : entities_) {
 		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d) {
-			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude();
-			if (score < min) min = score;
-			scheduled_delivery_agent = d;
+
+			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude(); //calculating distance from drone to package
+			if (score < min){
+				if (d->ScheduledPackage()==false && d->IsDynamic()==false){
+					min = score;
+					scheduled_drone = d;
+				}
+			}
+			// min = score;
+			// scheduled_drone = d;
 		}
 	}
-	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
+	if (scheduled_drone == nullptr){ //no drone is available so call function again until it is available
+		this->ScheduleDelivery(package, dest);
+	}
+	p->Notify(observers_, "scheduled");
+	auto path = graph_->GetPath(scheduled_drone->GetPosition(), p->GetPosition());
 	p->AssignCustomer(c);
 	scheduled_delivery_agent->SetGraph(graph_);
 	scheduled_delivery_agent->AssignPackage(p);
 	scheduled_delivery_agent->SetRoute(Vector3D::BuildRoute(path));
 }
 
-void DeliverySimulation::AddObserver(IEntityObserver* observer) {}
+void DeliverySimulation::AddObserver(IEntityObserver* observer) {
+	observers_.push_back(observer);
+}
 
-void DeliverySimulation::RemoveObserver(IEntityObserver* observer) {}
+void DeliverySimulation::RemoveObserver(IEntityObserver* observer) {
+	observers_.erase(std::remove(observers_.begin(), observers_.end(), observer), observers_.end());
+}
 
 const std::vector<IEntity*>& DeliverySimulation::GetEntities() const { return entities_; }
 
@@ -90,9 +106,16 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 }
 
 void DeliverySimulation::Update(float dt) {
-	if (scheduled_delivery_agent) {
-		scheduled_delivery_agent->Update(dt);
+
+	for (auto e : entities_){
+		Drone* d = dynamic_cast<Drone*>(e);
+		if (d){
+			d->Update(dt);
+		}
 	}
+	// if (scheduled_drone) {
+	// 	scheduled_drone->Update(dt);
+	// }
 }
 
 

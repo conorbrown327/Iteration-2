@@ -17,6 +17,8 @@ class Drone : public DeliveryAgent {
  public:
   Drone(std::vector<float> position) { SetPosition(position); battery_ = new Battery; SetType(DRONE); }
 
+
+
 };
 }  // namespace csci3081
 

@@ -12,6 +12,7 @@
 #include "factories/composite_factory.h"
 #include <vector>
 #include <string>
+#include <algorithm>
 
 namespace csci3081 {
 
