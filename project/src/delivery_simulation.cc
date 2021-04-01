@@ -56,30 +56,27 @@ void DeliverySimulation::SetGraph(const IGraph* graph) {
 }
 
 void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
-	scheduled_drone = nullptr;
+	scheduled_delivery_agent = nullptr;
 	Package* p = dynamic_cast<Package*>(package);
 	Customer* c = dynamic_cast<Customer*>(dest);
 	float min = std::numeric_limits<float>::infinity();
 	for (auto e : entities_) {
 		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d) {
-
 			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude(); //calculating distance from drone to package
 			if (score < min){
 				if (d->ScheduledPackage()==false && d->IsDynamic()==false){
 					min = score;
-					scheduled_drone = d;
+					scheduled_delivery_agent = d;
 				}
 			}
-			// min = score;
-			// scheduled_drone = d;
 		}
 	}
-	if (scheduled_drone == nullptr){ //no drone is available so call function again until it is available
+	if (scheduled_delivery_agent == nullptr){ //no drone is available so call function again until it is available
 		this->ScheduleDelivery(package, dest);
 	}
 	p->Notify(observers_, "scheduled");
-	auto path = graph_->GetPath(scheduled_drone->GetPosition(), p->GetPosition());
+	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
 	p->AssignCustomer(c);
 	scheduled_delivery_agent->SetGraph(graph_);
 	scheduled_delivery_agent->AssignPackage(p);
@@ -108,14 +105,11 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 void DeliverySimulation::Update(float dt) {
 
 	for (auto e : entities_){
-		Drone* d = dynamic_cast<Drone*>(e);
+		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d){
-			d->Update(dt);
+			d->Update(dt, observers_);
 		}
 	}
-	// if (scheduled_drone) {
-	// 	scheduled_drone->Update(dt);
-	// }
 }
 
 

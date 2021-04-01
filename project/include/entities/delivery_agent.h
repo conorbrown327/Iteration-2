@@ -19,7 +19,7 @@ class DeliveryAgent : public EntityBase {
     delete battery_;
   }
 
-  void Update(float dt);
+  void Update(float dt, std::vector<IEntityObserver*> observers);
 
   void AssignPackage(Package* p) { scheduled_package = p; }
   bool ScheduledPackage() { return (scheduled_package != nullptr); }
@@ -28,7 +28,7 @@ class DeliveryAgent : public EntityBase {
   void SetGraph(const IGraph* graph) { graph_ = graph; }
   float GetRemainingBattery() const { return battery_->ChargeLeft(); };
   const std::vector<Vector3D>& GetRoute() const { return route_; }
-  bool IsDynamic() const override { return true; }
+  bool IsDynamic() const override { return is_moving; }
 
   void SetRoute(std::vector<Vector3D> route) { route_ = route; routeTarget_ = 0; }
 

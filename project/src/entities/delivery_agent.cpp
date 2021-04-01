@@ -21,7 +21,7 @@ namespace csci3081 {
   }
 
 
-  void DeliveryAgent::Update(float dt) {
+  void DeliveryAgent::Update(float dt, std::vector<IEntityObserver*> observers) {
     if (routeTarget_ >= route_.size()) {
       routeTarget_ = 0;
       route_.clear();
@@ -36,8 +36,10 @@ namespace csci3081 {
         printf("Reached last node\n");
         if (!has_package && this->ScheduledPackage()) {
           this->PickUpPackage();
+          scheduled_package->Notify(observers, "en route");
         } else if (has_package) {
           this->DropOffPackage();
+          scheduled_package->Notify(observers, "delivered");
           routeTarget_ = 0;
           route_.clear();
         } else {
