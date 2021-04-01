@@ -1,6 +1,6 @@
 ### Feedback for Lab 13
 
-Run on March 28, 20:25:13 PM.
+Run on March 31, 19:49:46 PM.
 
 + :heavy_check_mark:  Run git ls-remote to check for existence of specific branch- Branch devel found
 
@@ -11,48 +11,46 @@ Run on March 28, 20:25:13 PM.
 
 #### Necessary Files and Structure
 
-+ :x:  Check that directory "project" exists.
++ :heavy_check_mark:  Check that directory "project" exists.
 
-     "project" not found.
++ :heavy_check_mark:  Check that directory "project/bin" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/bin" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/docs" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/docs" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/src" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/src" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/tests" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/tests" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/web" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/web" exists. (Test not run because of an earlier failing test)
-
-+ :leftwards_arrow_with_hook:  Check that file "project/Makefile" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that file "project/Makefile" exists.
 
 ---
 
 
 #### Compile Simulation and Tests
 
-+ :x:  Change into directory "project".
++ :heavy_check_mark:  Change into directory "project".
 
-     Directory "project" not found.
++ :heavy_check_mark:  Copy directory "Files for correct version".
 
-+ :leftwards_arrow_with_hook:  Copy directory "Files for correct version". (Test not run because of an earlier failing test)
 
-+ :leftwards_arrow_with_hook:  Check that make  compiles. (Test not run because of an earlier failing test)
 
-+ :leftwards_arrow_with_hook:  Check that make test compiles. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that make  compiles.
 
-+ :leftwards_arrow_with_hook:  Dynamic Check that file exists. (Test not run because of an earlier failing test)
 
-+ :leftwards_arrow_with_hook:  Dynamic Check that file exists. (Test not run because of an earlier failing test)
+
++ :heavy_check_mark:  Check that make test compiles.
+
+
+
++ :heavy_check_mark:  Dynamic Check that file exists.
+
++ :heavy_check_mark:  Dynamic Check that file exists.
 
 ---
 
-+ :x:  Check that make clean compiles.
-
-    Make compile fails with errors:.
-<pre>make: *** No rule to make target 'clean'.  Stop.
-</pre>
++ :heavy_check_mark:  Check that make clean compiles.
 
 
 
@@ -63,57 +61,53 @@ Run on March 28, 20:25:13 PM.
 
 + :heavy_check_mark:  Run git ls-remote to check for existence of specific branch- Branch master found
 
-+ :x:  Checkout master branch.
-
-<pre>fatal: not a git repository (or any parent up to mount point /project)
-Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
-</pre>
++ :heavy_check_mark:  Checkout master branch.
 
 
 
 
 #### Necessary Files and Structure
 
-+ :leftwards_arrow_with_hook:  Check that directory "project" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/bin" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/bin" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/docs" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/docs" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/src" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/src" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/tests" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/tests" exists.
 
-+ :leftwards_arrow_with_hook:  Check that directory "project/web" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that directory "project/web" exists.
 
-+ :leftwards_arrow_with_hook:  Check that file "project/Makefile" exists. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that file "project/Makefile" exists.
 
 ---
 
 
 #### Compile Simulation and Tests
 
-+ :x:  Change into directory "project".
++ :heavy_check_mark:  Change into directory "project".
 
-     Directory "project" not found.
++ :heavy_check_mark:  Copy directory "Files for correct version".
 
-+ :leftwards_arrow_with_hook:  Copy directory "Files for correct version". (Test not run because of an earlier failing test)
 
-+ :leftwards_arrow_with_hook:  Check that make  compiles. (Test not run because of an earlier failing test)
 
-+ :leftwards_arrow_with_hook:  Check that make test compiles. (Test not run because of an earlier failing test)
++ :heavy_check_mark:  Check that make  compiles.
 
-+ :leftwards_arrow_with_hook:  Dynamic Check that file exists. (Test not run because of an earlier failing test)
 
-+ :leftwards_arrow_with_hook:  Dynamic Check that file exists. (Test not run because of an earlier failing test)
+
++ :heavy_check_mark:  Check that make test compiles.
+
+
+
++ :heavy_check_mark:  Dynamic Check that file exists.
+
++ :heavy_check_mark:  Dynamic Check that file exists.
 
 ---
 
-+ :x:  Check that make clean compiles.
-
-    Make compile fails with errors:.
-<pre>make: *** No rule to make target 'clean'.  Stop.
-</pre>
++ :heavy_check_mark:  Check that make clean compiles.
 
 
 
