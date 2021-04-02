@@ -3,6 +3,7 @@
 #include "factories/drone_factory.h"
 #include "factories/customer_factory.h"
 #include "factories/package_factory.h"
+#include "factories/robot_factory.h"
 #include "json_helper.h"
 #include <limits>
 
@@ -13,6 +14,7 @@ DeliverySimulation::DeliverySimulation() {
 	AddFactory(new DroneFactory());
 	AddFactory(new CustomerFactory());
 	AddFactory(new PackageFactory());
+	AddFactory(new RobotFactory());
 }
 
 DeliverySimulation::~DeliverySimulation() {
@@ -27,9 +29,9 @@ int DeliverySimulation::Uid() { id_++; return id_; }
 IEntity* DeliverySimulation::CreateEntity(const picojson::object& val) {
     IEntity* ent = entity_factory_->CreateEntity(val);
     if (ent) {
-	  EntityBase* b = dynamic_cast<EntityBase*>(ent);
-	  b->SetId(this->Uid());
-	  b->Print();
+	  	EntityBase* b = dynamic_cast<EntityBase*>(ent);
+	  	b->SetId(this->Uid());
+	  	b->Print();
       return ent;
     }
     return NULL;
@@ -41,8 +43,8 @@ void DeliverySimulation::AddFactory(IEntityFactory* factory) {
 
 void DeliverySimulation::AddEntity(IEntity* entity) {
 	// Add to entity vector
-	if (entity) { 
-		entities_.push_back(entity); 
+	if (entity) {
+		entities_.push_back(entity);
 	} else {
 		std::cout << "Null entity attempted to be added" << std::endl;
 		return;
@@ -54,27 +56,61 @@ void DeliverySimulation::SetGraph(const IGraph* graph) {
 }
 
 void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
+	scheduled_delivery_agent = nullptr;
+
+	//determine if drone is available to deliver new package
+	bool available_deliverer = false;
+	DeliveryAgent* potential_deliverer;
+	for (auto e : entities_){
+		potential_deliverer = dynamic_cast<DeliveryAgent*>(e);
+		if (potential_deliverer){
+			if (potential_deliverer->ScheduledPackage() == false){ //drone doesn't have a scheduled package
+				available_deliverer = true;
+			}
+		}
+	}
+
+	//if not available deliverer, add package to waiting_packages vector
+	if(available_deliverer == false){
+		waiting_packages.push_back(package);
+		Package* waiting_package = dynamic_cast<Package*>(package);
+		Customer* waiting_customer = dynamic_cast<Customer*>(dest);
+		waiting_package->AssignCustomer(waiting_customer);
+		return;
+	}
+
 	Package* p = dynamic_cast<Package*>(package);
 	Customer* c = dynamic_cast<Customer*>(dest);
 	float min = std::numeric_limits<float>::infinity();
 	for (auto e : entities_) {
-		Drone* d = dynamic_cast<Drone*>(e);
+		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d) {
-			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude();
-			if (score < min) min = score;
-			scheduled_drone = d;
+			float score = (d->GetVPosition() - p->GetVPosition()).Magnitude(); //calculating distance from drone to package
+			if (score < min){
+				if (d->ScheduledPackage()==false && d->IsDynamic()==false){
+					min = score;
+					scheduled_delivery_agent = d;
+				}
+			}
 		}
 	}
-	auto path = graph_->GetPath(scheduled_drone->GetPosition(), p->GetPosition());
+	p->Notify(observers_, "scheduled");
+	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
 	p->AssignCustomer(c);
-	scheduled_drone->SetGraph(graph_);
-	scheduled_drone->AssignPackage(p);
-	scheduled_drone->SetRoute(Vector3D::BuildRoute(path));
+	scheduled_delivery_agent->SetGraph(graph_);
+	scheduled_delivery_agent->AssignPackage(p);
+	scheduled_delivery_agent->SetRoute(Vector3D::BuildRoute(path));
+	scheduled_delivery_agent->SetOriginalRoute(path);
+	scheduled_delivery_agent->Notify(observers_, "moving");
 }
 
-void DeliverySimulation::AddObserver(IEntityObserver* observer) {}
+void DeliverySimulation::AddObserver(IEntityObserver* observer) {
+	observers_.push_back(observer);
+}
 
-void DeliverySimulation::RemoveObserver(IEntityObserver* observer) {}
+void DeliverySimulation::RemoveObserver(IEntityObserver* observer) {
+	observers_.erase(std::remove(observers_.begin(), observers_.end(), observer), observers_.end());
+}
 
 const std::vector<IEntity*>& DeliverySimulation::GetEntities() const { return entities_; }
 
@@ -88,8 +124,35 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 }
 
 void DeliverySimulation::Update(float dt) {
-	if (scheduled_drone) {
-		scheduled_drone->Update(dt); 
+
+	//determine if there is an available deliverer
+	bool available_deliverer = false;
+	DeliveryAgent* potential_deliverer;
+	for (auto e : entities_){
+		potential_deliverer = dynamic_cast<DeliveryAgent*>(e);
+		if (potential_deliverer){
+			if (potential_deliverer->ScheduledPackage() == false){ //drone doesn't have a scheduled package
+				available_deliverer = true;
+			}
+		}
+	}
+
+	//if there is an available deliverer, schedule a delivery for a waiting package
+	if (available_deliverer){
+		if (!waiting_packages.empty()){
+			IEntity* e = waiting_packages[0];
+			waiting_packages.erase(waiting_packages.begin());
+			Package* p = dynamic_cast<Package*>(e);
+			IEntity* customer = dynamic_cast<IEntity*>(p->GetCustomer());
+			this->ScheduleDelivery(e, customer);
+		}
+	}
+
+	for (auto e : entities_){
+		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
+		if (d){
+			d->Update(dt, observers_);
+		}
 	}
 }
 

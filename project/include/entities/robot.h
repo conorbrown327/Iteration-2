@@ -1,5 +1,5 @@
-#ifndef DRONE_H_
-#define DRONE_H_
+#ifndef ROBOT_H_
+#define ROBOT_H_
 
 #include <cmath>
 #include <queue>
@@ -13,13 +13,11 @@
 
 namespace csci3081 {
 
-class Drone : public DeliveryAgent {
+class Robot : public DeliveryAgent {
  public:
-  Drone(std::vector<float> position) { SetPosition(position); battery_ = new Battery; SetType(DRONE); }
-
-
+  Robot(std::vector<float> position) { SetPosition(position); battery_ = new Battery; SetType(ROBOT); }
 
 };
 }  // namespace csci3081
 
-#endif  // SRC_DRONE_H_
+#endif  // SRC_ROBOT_H_

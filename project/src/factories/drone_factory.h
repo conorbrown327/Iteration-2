@@ -13,8 +13,6 @@ class DroneFactory : public IEntityFactory {
   DroneFactory();
   ~DroneFactory();
   IEntity* CreateEntity(const picojson::object &val) override;
-
- private:
 };
 
 }
