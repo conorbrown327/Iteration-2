@@ -23,7 +23,7 @@ namespace csci3081 {
 
 
   void DeliveryAgent::Update(float dt, std::vector<IEntityObserver*> observers) {
-    if(scheduled_package == nullptr){
+    if(scheduled_package == nullptr){ //if there is no scheduled_package, do not move DeliveryAgent
       return;
     }
     if (routeTarget_ >= route_.size()) {

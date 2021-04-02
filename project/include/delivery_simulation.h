@@ -124,8 +124,6 @@ class DeliverySimulation : public IDeliverySystem {
    */
   void RunScript(const picojson::array& script, IEntitySystem* system) const;
 
-  bool PackageWaiting(){return !waiting_packages.empty();}
-
  private:
   // You don't strictly need to use the following variable, but it is probably
   // the most straightforward way of storing the entities in the system.

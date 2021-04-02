@@ -58,6 +58,7 @@ void DeliverySimulation::SetGraph(const IGraph* graph) {
 void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 	scheduled_delivery_agent = nullptr;
 
+	//determine if drone is available to deliver new package
 	bool available_deliverer = false;
 	DeliveryAgent* potential_deliverer;
 	for (auto e : entities_){
@@ -69,6 +70,7 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 		}
 	}
 
+	//if not available deliverer, add package to waiting_packages vector
 	if(available_deliverer == false){
 		waiting_packages.push_back(package);
 		Package* waiting_package = dynamic_cast<Package*>(package);
@@ -91,9 +93,6 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 				}
 			}
 		}
-	}
-	if (scheduled_delivery_agent == nullptr){ //no drone is available so call function again until it is available
-		this->ScheduleDelivery(package, dest);
 	}
 	p->Notify(observers_, "scheduled");
 	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
@@ -126,6 +125,7 @@ void DeliverySimulation::RemoveEntity(IEntity* entity) {
 
 void DeliverySimulation::Update(float dt) {
 
+	//determine if there is an available deliverer
 	bool available_deliverer = false;
 	DeliveryAgent* potential_deliverer;
 	for (auto e : entities_){
@@ -137,13 +137,13 @@ void DeliverySimulation::Update(float dt) {
 		}
 	}
 
+	//if there is an available deliverer, schedule a delivery for a waiting package
 	if (available_deliverer){
 		if (!waiting_packages.empty()){
 			IEntity* e = waiting_packages[0];
 			waiting_packages.erase(waiting_packages.begin());
 			Package* p = dynamic_cast<Package*>(e);
 			IEntity* customer = dynamic_cast<IEntity*>(p->GetCustomer());
-			std::cout << "------Attempting to Schedule Waiting Package Delivery------\n";
 			this->ScheduleDelivery(e, customer);
 		}
 	}
