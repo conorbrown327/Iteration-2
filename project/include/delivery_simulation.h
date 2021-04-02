@@ -130,6 +130,7 @@ class DeliverySimulation : public IDeliverySystem {
   // Feel free to use it as is or change it.
   std::vector<IEntity*> entities_;
   std::vector<IEntityObserver*> observers_;
+  std::vector<IEntity*> waiting_packages;
   DeliveryAgent* scheduled_delivery_agent = nullptr;
   CompositeFactory* entity_factory_; // To create entities in the simulation
   const IGraph* graph_;

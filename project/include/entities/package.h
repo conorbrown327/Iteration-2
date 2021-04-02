@@ -13,12 +13,12 @@ class Package : public EntityBase {
 
   Package(std::vector<float> position) { SetPosition(position); SetType(PACKAGE); }
   virtual ~Package() {
-    //delete customer_; 
+    //delete customer_;
   }
 
   void AssignCustomer(Customer* customer) { customer_ = customer; }
 
-  const Customer* GetCustomer() { return customer_; }
+  Customer* GetCustomer() { return customer_; }
 
   bool IsDynamic() const override { return true; }
 
