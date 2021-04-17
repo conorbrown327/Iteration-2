@@ -4,6 +4,8 @@
 #include <EntityProject/facade/delivery_system.h>
 #include "I_Strategy.h"
 
+#include <vector>
+
 namespace csci3081 {
 
 class Beeline : public IStrategy{

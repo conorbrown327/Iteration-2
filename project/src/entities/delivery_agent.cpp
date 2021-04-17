@@ -3,9 +3,10 @@
 namespace csci3081 {
 
   void DeliveryAgent::DetermineStrategy(std::string strategy){
-    if(strategy.compare("beeline"))
+    std::cout << "COMPARE: " << strategy.compare("beeline") << std::endl;
+    if(!strategy.compare("beeline"))
       strategy_ = new Beeline();
-    else if(strategy.compare("parabolic"))
+    else if(!strategy.compare("parabolic"))
       strategy_ = new Parabolic();
     else
       strategy_ = new Smart();

@@ -21,15 +21,7 @@ namespace csci3081 {
 
 class DeliveryAgent : public EntityBase {
  public:
- DeliveryAgent() {
-   if(JsonHelper::ContainsKey(this->GetDetails(), "path"))
-   {
-    std::string strategy = JsonHelper::GetString(this->GetDetails(), "path");
-    this->DetermineStrategy(strategy);
-   }
-   else
-    strategy_ = new Smart();
- }
+ DeliveryAgent() {}
   virtual ~DeliveryAgent() {
     delete battery_;
     delete strategy_;
@@ -60,7 +52,7 @@ protected:
   std::vector<Vector3D> route_;
   std::vector<std::vector<float>> original_route;
   const IGraph* graph_;
-  IStrategy* strategy_;
+  IStrategy* strategy_ = nullptr;
   int routeTarget_ = -1;
   bool has_package = false;
   Battery* battery_ = nullptr;
