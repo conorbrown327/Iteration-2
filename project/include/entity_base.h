@@ -28,7 +28,8 @@ enum EntityType { UNDEFINED_ENTITY, DRONE, CUSTOMER, PACKAGE, ROBOT };
 
 class EntityBase : public IEntity {
  public:
-  virtual ~EntityBase() {}
+  virtual ~EntityBase() {
+  }
 
     /// Returns the unique entity id.
     int GetId() const override { return id_; }

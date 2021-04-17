@@ -6,6 +6,7 @@
 #include "factories/robot_factory.h"
 #include "json_helper.h"
 #include <limits>
+#include "strategy/smart_route.h"
 
 namespace csci3081 {
 
@@ -95,7 +96,9 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 		}
 	}
 	p->Notify(observers_, "scheduled");
-	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
+	auto path = scheduled_delivery_agent->GetStrategy()->DetermineRoute(graph_, scheduled_delivery_agent->GetPosition(),
+				p->GetPosition());
+	//auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
 	p->AssignCustomer(c);
 	scheduled_delivery_agent->SetGraph(graph_);
 	scheduled_delivery_agent->AssignPackage(p);

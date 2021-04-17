@@ -10,6 +10,8 @@
 #include "entity_base.h"
 #include "entities/package.h"
 #include "entities/battery.h"
+#include "strategy/I_Strategy.h"
+#include "strategy/smart_route.h"
 
 namespace csci3081 {
 
@@ -17,6 +19,7 @@ class DeliveryAgent : public EntityBase {
  public:
   virtual ~DeliveryAgent() {
     delete battery_;
+    delete strategy_;
   }
 
   void Update(float dt, std::vector<IEntityObserver*> observers);
@@ -36,10 +39,14 @@ class DeliveryAgent : public EntityBase {
 
   void Notify(std::vector<IEntityObserver*> observers, std::string value);
 
+  void SetStrategy(IStrategy* strategy) { strategy_ = strategy; }
+  IStrategy* GetStrategy() { return strategy_; }
+
 protected:
   std::vector<Vector3D> route_;
   std::vector<std::vector<float>> original_route;
   const IGraph* graph_;
+  IStrategy* strategy_ = new Smart();
   int routeTarget_ = -1;
   bool has_package = false;
   Battery* battery_ = nullptr;
