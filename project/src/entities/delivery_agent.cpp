@@ -1,11 +1,20 @@
-#include <vector>
 #include "entities/delivery_agent.h"
-#include "json_helper.h"
 
 namespace csci3081 {
 
+  void DeliveryAgent::DetermineStrategy(std::string strategy){
+    if(strategy.compare("beeline"))
+      strategy_ = new Beeline();
+    else if(strategy.compare("parabolic"))
+      strategy_ = new Parabolic();
+    else
+      strategy_ = new Smart();
+  }
+
   void DeliveryAgent::PickUpPackage() {
-    auto route = graph_->GetPath(scheduled_package->GetPosition(), scheduled_package->GetCustomer()->GetPosition());
+    auto route = this->GetStrategy()->DetermineRoute(graph_, scheduled_package->GetPosition(),
+				scheduled_package->GetCustomer()->GetPosition());
+    //auto route = graph_->GetPath(scheduled_package->GetPosition(), scheduled_package->GetCustomer()->GetPosition());
     if (route.size() == 0) printf("There is no path from package to customer!\n");
     routeTarget_ = 0;
     route_ = Vector3D::BuildRoute(route);

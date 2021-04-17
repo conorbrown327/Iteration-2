@@ -8,8 +8,8 @@ namespace csci3081 {
 
 class Parabolic : public IStrategy{
  public:
-    Parabolic();
-    ~Parabolic();
+    Parabolic() {}
+    ~Parabolic() {}
 
     const std::vector< std::vector<float> > DetermineRoute(const IGraph* graph, const std::vector<float>& src, const std::vector<float>& dest);
 };

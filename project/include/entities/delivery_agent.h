@@ -5,6 +5,7 @@
 #include <queue>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include <EntityProject/facade/delivery_system.h>
 #include "entity_base.h"
@@ -12,11 +13,23 @@
 #include "entities/battery.h"
 #include "strategy/I_Strategy.h"
 #include "strategy/smart_route.h"
+#include "strategy/beeline_route.h"
+#include "strategy/parabolic_route.h"
+#include "json_helper.h"
 
 namespace csci3081 {
 
 class DeliveryAgent : public EntityBase {
  public:
+ DeliveryAgent() {
+   if(JsonHelper::ContainsKey(this->GetDetails(), "path"))
+   {
+    std::string strategy = JsonHelper::GetString(this->GetDetails(), "path");
+    this->DetermineStrategy(strategy);
+   }
+   else
+    strategy_ = new Smart();
+ }
   virtual ~DeliveryAgent() {
     delete battery_;
     delete strategy_;
@@ -41,12 +54,13 @@ class DeliveryAgent : public EntityBase {
 
   void SetStrategy(IStrategy* strategy) { strategy_ = strategy; }
   IStrategy* GetStrategy() { return strategy_; }
+  void DetermineStrategy(std::string strategy);
 
 protected:
   std::vector<Vector3D> route_;
   std::vector<std::vector<float>> original_route;
   const IGraph* graph_;
-  IStrategy* strategy_ = new Smart();
+  IStrategy* strategy_;
   int routeTarget_ = -1;
   bool has_package = false;
   Battery* battery_ = nullptr;

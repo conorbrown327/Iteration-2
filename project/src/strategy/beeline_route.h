@@ -8,8 +8,8 @@ namespace csci3081 {
 
 class Beeline : public IStrategy{
  public:
-    Beeline();
-    ~Beeline();
+    Beeline() {}
+    ~Beeline() {}
 
     const std::vector< std::vector<float> > DetermineRoute(const IGraph* graph, const std::vector<float>& src, const std::vector<float>& dest);
 };
