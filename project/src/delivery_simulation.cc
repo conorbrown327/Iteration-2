@@ -97,14 +97,12 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 	}
 	p->Notify(observers_, "scheduled");
 
-   // Set the delivery agents strategy, if not specified or robot then set as smart route
+   // Set the delivery agents strategy, if not specified or robot then it is a smart route
    if(JsonHelper::ContainsKey(scheduled_delivery_agent->GetDetails(), "path"))
    {
     std::string strategy = JsonHelper::GetString(scheduled_delivery_agent->GetDetails(), "path");
     scheduled_delivery_agent->DetermineStrategy(strategy);
    }
-   else
-    scheduled_delivery_agent->SetStrategy(new Smart());
 
 	auto path = scheduled_delivery_agent->GetStrategy()->DetermineRoute(graph_, scheduled_delivery_agent->GetPosition(),
 				p->GetPosition());

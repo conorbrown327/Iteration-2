@@ -52,7 +52,7 @@ protected:
   std::vector<Vector3D> route_;
   std::vector<std::vector<float>> original_route;
   const IGraph* graph_;
-  IStrategy* strategy_ = nullptr;
+  IStrategy* strategy_ = new Smart();
   int routeTarget_ = -1;
   bool has_package = false;
   Battery* battery_ = nullptr;
