@@ -14,7 +14,7 @@ const std::vector< std::vector<float> > Beeline::DetermineRoute(const IGraph* gr
     float destZ = dest.at(2);
     route.push_back(src);
 
-    // elevate the drone to the max height 400 in increments of 40 
+    // elevate the drone to the height 400 in increments of 40 
     for(int i = 0; i <= 10; i++){
         std::vector<float> addToRoute;
 
@@ -51,7 +51,6 @@ const std::vector< std::vector<float> > Beeline::DetermineRoute(const IGraph* gr
     }
 
     return route;
-    //return graph->GetPath(src, dest);
 }
 
 }
