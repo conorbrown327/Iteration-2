@@ -20,6 +20,10 @@ IEntity* DroneFactory::CreateEntity(const picojson::object &val) {
     auto init_pos = JsonHelper::GetStdFloatVector(config, "position");
     drone = new Drone(init_pos);
     drone->SetDetails(val);
+    if(JsonHelper::ContainsKey(val, "battery_capacity")) {
+      float f = JsonHelper::GetDouble(val, "battery_capacity");
+      drone->AssignBattery(new Battery(f));
+    }
   }
   return drone;
 }

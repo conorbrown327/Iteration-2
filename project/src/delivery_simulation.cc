@@ -142,7 +142,9 @@ void DeliverySimulation::Update(float dt) {
 		potential_deliverer = dynamic_cast<DeliveryAgent*>(e);
 		if (potential_deliverer){
 			if (potential_deliverer->ScheduledPackage() == false){ //drone doesn't have a scheduled package
-				available_deliverer = true;
+				if (potential_deliverer->GetRemainingBattery() > 0) { // drone has battery left
+					available_deliverer = true;
+				}
 			}
 		}
 	}
@@ -162,6 +164,13 @@ void DeliverySimulation::Update(float dt) {
 		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d){
 			d->Update(dt, observers_);
+			if(d->GetRemainingBattery() <= 0) {
+				Package* p = d->GetPackage();
+				IEntity* e = dynamic_cast<IEntity*>(p);
+				IEntity* c = dynamic_cast<IEntity*>(p->GetCustomer());
+				this->ScheduleDelivery(e, c);
+				
+			}
 		}
 	}
 }

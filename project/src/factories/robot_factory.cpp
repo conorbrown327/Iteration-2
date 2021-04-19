@@ -20,6 +20,10 @@ IEntity* RobotFactory::CreateEntity(const picojson::object &val) {
     auto init_pos = JsonHelper::GetStdFloatVector(config, "position");
     robot = new Robot(init_pos);
     robot->SetDetails(val);
+    if(JsonHelper::ContainsKey(val, "battery_capacity")) {
+      float f = JsonHelper::GetDouble(val, "battery_capacity");
+      robot->AssignBattery(new Battery(f));
+    }
   }
   return robot;
 }
