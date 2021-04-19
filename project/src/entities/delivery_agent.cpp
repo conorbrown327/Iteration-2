@@ -26,6 +26,10 @@ namespace csci3081 {
     if(scheduled_package == nullptr){ //if there is no scheduled_package, do not move DeliveryAgent
       return;
     }
+    if(battery_->IsDead()) {
+      //this->Notify(observers, "idle");
+      return;
+    }
     if (routeTarget_ >= route_.size()) {
       routeTarget_ = 0;
       route_.clear();

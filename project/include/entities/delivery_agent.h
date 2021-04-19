@@ -24,11 +24,13 @@ class DeliveryAgent : public EntityBase {
   void AssignPackage(Package* p) { scheduled_package = p; }
   bool ScheduledPackage() { return (scheduled_package != nullptr); }
   bool HasPackage(Package* p) { return has_package; }
+  Package* GetPackage() { return scheduled_package; }
 
   void SetGraph(const IGraph* graph) { graph_ = graph; }
   float GetRemainingBattery() const { return battery_->ChargeLeft(); };
   const std::vector<Vector3D>& GetRoute() const { return route_; }
   bool IsDynamic() const override { return is_moving; }
+  void AssignBattery(Battery* b) { battery_ = b; }
 
   void SetRoute(std::vector<Vector3D> route) { route_ = route; routeTarget_ = 0; }
 
