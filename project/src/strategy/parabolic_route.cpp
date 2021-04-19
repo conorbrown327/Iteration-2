@@ -1,4 +1,4 @@
-#include "parabolic_route.h"
+#include "strategy/parabolic_route.h"
 #include <EntityProject/facade/delivery_system.h>
 
 #include <math.h>
@@ -20,16 +20,17 @@ const std::vector< std::vector<float> > Parabolic::DetermineRoute(const IGraph* 
     float diffX = destX - srcX;
     float diffZ = destZ - srcZ;
 
+    // calculations for the quadratic equation
     float a = (-4 * 400) + (2 * srcY) + (2 * destY);
     float b = (4 * 400) - (3 * srcY) - (destY);
 
+    // add the points on the parabola for the drone to follow
     for(int i = 0; i <= 10; i++)
     {
         std::vector<float> addToRoute;
         float interval = float(i) / 10.0;
         addToRoute.push_back(srcX + diffX * interval);
         addToRoute.push_back((a * interval * interval) + (b * interval) + srcY);
-        std::cout << "Y: " << ((a * interval * interval) + (b * interval) + srcY) << std::endl;
         addToRoute.push_back(srcZ + diffZ * interval);
         route.push_back(addToRoute);
     }
