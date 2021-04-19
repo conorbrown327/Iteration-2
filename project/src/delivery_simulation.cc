@@ -106,7 +106,6 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 
 	auto path = scheduled_delivery_agent->GetStrategy()->DetermineRoute(graph_, scheduled_delivery_agent->GetPosition(),
 				p->GetPosition());
-	//auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
 	p->AssignCustomer(c);
 	scheduled_delivery_agent->SetGraph(graph_);
 	scheduled_delivery_agent->AssignPackage(p);
