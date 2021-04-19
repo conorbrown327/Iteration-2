@@ -32,6 +32,7 @@ struct Vector3D {
     Vector3D(std::vector<float> vec) : x(vec[0]), y(vec[1]), z(vec[2]) {}
     Vector3D(const Vector3D& rhs) { x = rhs.x; y = rhs.y; z = rhs.z; }
 
+    ///Assignment operator for Vector3D
     Vector3D operator=(const Vector3D& rhs) {
         x = rhs.x;
         y = rhs.y;
@@ -39,11 +40,16 @@ struct Vector3D {
         return *this;
     }
 
+    ///Vector addition arithmetic
     Vector3D operator+(const Vector3D& rhs) { return Vector3D(x + rhs.x, y + rhs.y, z + rhs.z); }
+    ///Vector subtraction arithmetic
     Vector3D operator-(const Vector3D& rhs) { return Vector3D(x - rhs.x, y - rhs.y, z - rhs.z); }
+    ///Vector multiplication arithmetic
     Vector3D operator*(float scalar) { return Vector3D(x * scalar, y * scalar, z * scalar); }
+    ///Vector division arithmetic
     Vector3D operator/(float scalar) { return Vector3D(x / scalar, y / scalar, z / scalar); }
 
+    ///Adds rhs values to the lhs Vector3D
     Vector3D operator+=(const Vector3D& rhs) {
         x += rhs.x;
         y += rhs.y;
@@ -51,6 +57,7 @@ struct Vector3D {
         return *this;
     }
 
+    ///Adds s to x,y,z variables of the Vector3D struct
     Vector3D operator+=(float s) {
         x += s;
         y += s;
@@ -58,6 +65,7 @@ struct Vector3D {
         return *this;
     }
 
+    ///Subtracts rhs values from the lhs Vector3D
     Vector3D operator-=(const Vector3D& rhs) {
         x -= rhs.x;
         y -= rhs.y;
@@ -65,6 +73,7 @@ struct Vector3D {
         return *this;
     }
 
+    ///Subtracts s from x,y,z variables of the Vector3D struct
     Vector3D operator-=(float s) {
         x -= s;
         y -= s;
@@ -72,6 +81,7 @@ struct Vector3D {
         return *this;
     }
 
+    ///Multiplys s by x,y,z variables of the Vector3D struct
     Vector3D operator*=(float s) {
         x *= s;
         y *= s;
@@ -79,11 +89,15 @@ struct Vector3D {
         return *this;
     }
 
+    ///Takes x, y, and z to the power of n
     Vector3D pow(float n) {
         return Vector3D(std::pow(this->x, n), std::pow(this->y, n), std::pow(this->z, n));
     }
 
+    ///Checks if lhs Vector3D and rhs Vector3D have the same values for x,y,z
     bool operator==(const Vector3D rhs) { return (x == rhs.x && y == rhs.y && z == rhs.z); }
+
+    ///Checks if lhs Vector3D and rhs Vector3D don't have the same values for x,y,z
     bool operator!=(const Vector3D rhs) { return (x != rhs.x || y != rhs.y || z != rhs.z); }
 
     friend std::ostream& operator<<(std::ostream& os, const Vector3D& v) {
@@ -117,6 +131,7 @@ struct Vector3D {
         return route;
     }
 
+    ///Prints the x,y,z values of the vector
     void Print() const { printf("<%f,%f,%f>\n", x, y, z); }
 
     ///Returns the distance between two Vector3D structs
