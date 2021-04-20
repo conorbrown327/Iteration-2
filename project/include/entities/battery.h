@@ -5,13 +5,28 @@
 
 namespace csci3081 {
 
+/*******************************************************************************
+ * Class Definitions
+ ******************************************************************************/
+/**
+ * @brief This class represents a battery
+ *
+ * This class will store charge for a delivery agent.
+ */
+
 class Battery {
  public:
   ~Battery() {}
   Battery() {}
   Battery(float max_charge);
+  
+  /// Returns true if the battery is dead, false otherwise
   bool IsDead() { return dead_battery_; }
+  
+  /// Returns the remaining charge
   float ChargeLeft() { return remaining_battery_; }
+  
+  /// Decreases the charge in the battery
   void DepleteBattery(float dt);
 
  private:

@@ -1,8 +1,21 @@
 /*! \mainpage CSCI 3081 Delivery Simulation project
 *
-* This file is currently a stub. To view project startup instructions, check Lab 10
+* \section team_docs Team Documentation
 *
-* To generate documentation, first build the project with `make` in the `project` directory.
-* Next, navigate to `project/docs` and run `doxygen Doxyfile`.
-* Then open `project/docs/html/index.html` in your web browser to view the documentation.
+* Roles:
+*
+* Development Lead    | Noah \n
+* Scheduler           | Erik \n
+* Reporter            | Nick \n
+* Project Manager     | Conor \n
+*\n
+* Meetings:
+*
+* - 4/5/21
+*   - Assigned Nick and Erik to Priority One and Two, respectively
+* - 4/12/21
+*   - Assigned Conor and Noah to Priority Three and Four, respectively
+* - 4/19/21
+*   - Merged branches into master for final turn-in and completed group documentation
+*
 */
