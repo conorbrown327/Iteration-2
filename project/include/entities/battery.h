@@ -8,15 +8,16 @@
 
 namespace csci3081 {
 
-  /*******************************************************************************
-   * Class Definitions
-   ******************************************************************************/
-  /**
-   * @brief This is class to represent batteries in the simulation.
-   *
-   *
-   *
-   */
+
+/*******************************************************************************
+ * Class Definitions
+ ******************************************************************************/
+/**
+ * @brief This class represents a battery
+ *
+ * This class will store charge for a delivery agent.
+ */
+
 
 class Battery {
  public:
@@ -26,11 +27,15 @@ class Battery {
   Battery() {}
   ///Constructor: sets the max charge to the passed in value
   Battery(float max_charge);
-  ///returns true if the battery is dead, and false otherwise
+  
+  /// Returns true if the battery is dead, false otherwise
   bool IsDead() { return dead_battery_; }
-  ///returns the remaining charge left on the battery
+  
+  /// Returns the remaining charge
   float ChargeLeft() { return remaining_battery_; }
-  ///depletes the battery's charge by the passed in value
+  
+  /// Decreases the charge in the battery
+
   void DepleteBattery(float dt);
 
  private:

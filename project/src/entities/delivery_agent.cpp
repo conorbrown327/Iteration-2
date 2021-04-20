@@ -1,11 +1,21 @@
-#include <vector>
 #include "entities/delivery_agent.h"
-#include "json_helper.h"
 
 namespace csci3081 {
 
+  void DeliveryAgent::DetermineStrategy(std::string strategy){
+    std::cout << "COMPARE: " << strategy.compare("beeline") << std::endl;
+    if(!strategy.compare("beeline"))
+      strategy_ = new Beeline();
+    else if(!strategy.compare("parabolic"))
+      strategy_ = new Parabolic();
+    else
+      strategy_ = new Smart();
+  }
+
   void DeliveryAgent::PickUpPackage() {
-    auto route = graph_->GetPath(scheduled_package->GetPosition(), scheduled_package->GetCustomer()->GetPosition());
+    auto route = this->GetStrategy()->DetermineRoute(graph_, scheduled_package->GetPosition(),
+				scheduled_package->GetCustomer()->GetPosition());
+    //auto route = graph_->GetPath(scheduled_package->GetPosition(), scheduled_package->GetCustomer()->GetPosition());
     if (route.size() == 0) printf("There is no path from package to customer!\n");
     routeTarget_ = 0;
     route_ = Vector3D::BuildRoute(route);
@@ -24,6 +34,10 @@ namespace csci3081 {
 
   void DeliveryAgent::Update(float dt, std::vector<IEntityObserver*> observers) {
     if(scheduled_package == nullptr){ //if there is no scheduled_package, do not move DeliveryAgent
+      return;
+    }
+    if(battery_->IsDead()) {
+      //this->Notify(observers, "idle");
       return;
     }
     if (routeTarget_ >= route_.size()) {

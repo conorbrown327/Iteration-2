@@ -6,6 +6,7 @@
 #include "factories/robot_factory.h"
 #include "json_helper.h"
 #include <limits>
+#include "strategy/smart_route.h"
 
 namespace csci3081 {
 
@@ -95,7 +96,16 @@ void DeliverySimulation::ScheduleDelivery(IEntity* package, IEntity* dest) {
 		}
 	}
 	p->Notify(observers_, "scheduled");
-	auto path = graph_->GetPath(scheduled_delivery_agent->GetPosition(), p->GetPosition());
+
+   // Set the delivery agents strategy, if not specified or robot then it is a smart route
+   if(JsonHelper::ContainsKey(scheduled_delivery_agent->GetDetails(), "path"))
+   {
+    std::string strategy = JsonHelper::GetString(scheduled_delivery_agent->GetDetails(), "path");
+    scheduled_delivery_agent->DetermineStrategy(strategy);
+   }
+
+	auto path = scheduled_delivery_agent->GetStrategy()->DetermineRoute(graph_, scheduled_delivery_agent->GetPosition(),
+				p->GetPosition());
 	p->AssignCustomer(c);
 	scheduled_delivery_agent->SetGraph(graph_);
 	scheduled_delivery_agent->AssignPackage(p);
@@ -132,7 +142,9 @@ void DeliverySimulation::Update(float dt) {
 		potential_deliverer = dynamic_cast<DeliveryAgent*>(e);
 		if (potential_deliverer){
 			if (potential_deliverer->ScheduledPackage() == false){ //drone doesn't have a scheduled package
-				available_deliverer = true;
+				if (potential_deliverer->GetRemainingBattery() > 0) { // drone has battery left
+					available_deliverer = true;
+				}
 			}
 		}
 	}
@@ -152,6 +164,13 @@ void DeliverySimulation::Update(float dt) {
 		DeliveryAgent* d = dynamic_cast<DeliveryAgent*>(e);
 		if (d){
 			d->Update(dt, observers_);
+			if(d->GetRemainingBattery() <= 0) {
+				Package* p = d->GetPackage();
+				IEntity* e = dynamic_cast<IEntity*>(p);
+				IEntity* c = dynamic_cast<IEntity*>(p->GetCustomer());
+				this->ScheduleDelivery(e, c);
+				
+			}
 		}
 	}
 }
