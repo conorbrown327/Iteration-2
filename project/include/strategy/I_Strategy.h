@@ -30,8 +30,8 @@ class IStrategy {
      * for the delivery system.
      *
      * It takes in an IGraph pointer for the
-     * Smart route case where calls GetPath(). It takes in the src vectore,
-     * where the delivery system starts and dest vector, where the deleivery
+     * Smart route case where calls GetPath(). It takes in the src vector,
+     * where the delivery agent starts and dest vector, where the deleivery
      * system is trying to go. It will return a vector of points represented as
      * vectors for the delivery system to follow.
      */
