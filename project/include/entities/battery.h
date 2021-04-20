@@ -1,9 +1,13 @@
+/**
+ * @file customer.h
+ */
 #ifndef BATTERY_H_
 #define BATTERY_H_
 
 #include <iostream>
 
 namespace csci3081 {
+
 
 /*******************************************************************************
  * Class Definitions
@@ -14,10 +18,14 @@ namespace csci3081 {
  * This class will store charge for a delivery agent.
  */
 
+
 class Battery {
  public:
+   ///Destructor
   ~Battery() {}
+  ///Default contructor: sets the max charge to 10000
   Battery() {}
+  ///Constructor: sets the max charge to the passed in value
   Battery(float max_charge);
   
   /// Returns true if the battery is dead, false otherwise
@@ -27,6 +35,7 @@ class Battery {
   float ChargeLeft() { return remaining_battery_; }
   
   /// Decreases the charge in the battery
+
   void DepleteBattery(float dt);
 
  private:
