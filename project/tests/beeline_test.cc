@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "json_helper.h"
+#include "../include/strategy/I_Strategy.h"
 #include "../include/strategy/beeline_route.h"
 #include <EntityProject/entity.h>
 
@@ -29,14 +30,14 @@ class BeelineTest : public ::testing::Test {
 TEST_F(BeelineTest, TestRoute) {
 
  std::vector<float> src;
- position_init.push_back(100);
- position_init.push_back(100);
- position_init.push_back(100);
+ src.push_back(100);
+ src.push_back(100);
+ src.push_back(100);
 
  std::vector<float> dest;
- direction_init.push_back(0);
- direction_init.push_back(0);
- direction_init.push_back(0);
+ dest.push_back(0);
+ dest.push_back(0);
+ dest.push_back(0);
 
  std::vector< std::vector<float> > path = bee->DetermineRoute(new IStrategy(), src, dest);
 
